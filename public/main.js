@@ -1,14 +1,5 @@
 function gen(container, options){
 	var plot = {};
-	/*var online.container = document.getElementById('online');
-	var online.options = {
-		sampling: true,
-		legend: true,
-		drawPoints: {style: 'circle', enabled:true, size:3},
-		catmullRom: false,
-		start: startPoint,
-		end: endPoint
-	};*/
 	plot.dataset = new vis.DataSet({
 		type: {start: 'ISODate', end: 'ISODate' }
 	});
@@ -27,7 +18,14 @@ var online = gen($('#online')[0], {
 	drawPoints: {style: 'circle', enabled:true, size:3},
 	catmullRom: false,
 	start: startPoint,
-	end: endPoint
+	end: endPoint,
+	dataAxis: {
+		customRange: {
+			left: {
+			min:0
+			}
+		}
+	}
 });
 
 var TPS = gen($('#TPS')[0], {
@@ -37,7 +35,14 @@ var TPS = gen($('#TPS')[0], {
 	drawPoints: {style: 'circle', enabled:true, size:3},
 	catmullRom: false,
 	start: startPoint,
-	end: endPoint
+	end: endPoint,
+	dataAxis: {
+		customRange: {
+			left: {
+			min:0
+			}
+		}
+	}
 });
 
 var temp = gen($('#temp')[0], {
@@ -47,87 +52,61 @@ var temp = gen($('#temp')[0], {
 	drawPoints: {style: 'circle', enabled:true, size:3},
 	catmullRom: false,
 	start: startPoint,
-	end: endPoint
+	end: endPoint,
+	dataAxis: {
+		customRange: {
+			left: {
+			min:0
+			}
+		}
+	}
 });
 
 var cpu = gen($('#cpu')[0], {
-	defaultGroup: 'CPU',
+	defaultGroup: 'CPU(%)',
 	sampling: true,
 	legend: true,
 	drawPoints: {style: 'circle', enabled:true, size:3},
 	catmullRom: {parametrization: 'uniform'},
 	shaded: {orientation: 'bottom'},
 	start: startPoint,
-	end: endPoint
+	end: endPoint,
+	dataAxis: {
+		customRange: {
+			left: {
+			min:0
+			}
+		}
+	}
 });
 
 var mem = gen($('#mem')[0], {
-	defaultGroup: 'mem used',
+	defaultGroup: 'mem used(MB)',
 	sampling: true,
 	legend: true,
 	drawPoints: {style: 'circle', enabled:true, size:3},
 	catmullRom: {parametrization: 'uniform'},
 	shaded: {orientation: 'bottom'},
 	start: startPoint,
-	end: endPoint
+	end: endPoint,
+	dataAxis: {
+		customRange: {
+			left: {
+			min:0
+			}
+		}
+	}
 });
 
 
-var mem_options = {
+/*var mem_options = {
 	sampling: true,
 	legend: true,
 	drawPoints: {style: 'circle', enabled:true, size:3},
 	catmullRom: {parametrization: 'uniform'},
 	start: startPoint,
 	end: endPoint
-};
-/*
-var dataset = new vis.DataSet({
-	type: {start: 'ISODate', end: 'ISODate' }
-});
-var groups = new vis.DataSet();
-groups.add({
-id: 0,
-content: 'onlines',
-options: {
-    catmullRom: {
-        parametrization: 'uniform'
-    }
-}});
-
-groups.add({
-id: 1,
-content: 'TPS',
-options: {
-    drawPoints: false,
-    catmullRom: {
-        parametrization: 'uniform'
-    }
-}});
-
-groups.add({
-id: 2,
-content: 'mem used',
-options: {
-    drawPoints: false,
-    catmullRom: {
-        parametrization: 'uniform'
-    },
-    shaded: {
-      orientation: 'bottom' // top, bottom
-    }
-}
-});
-
-groups.add({
-id: 3,
-content: 'temp',
-options: {
-    catmullRom: 'uniform'
-}});
-
-var graph2d = new vis.Graph2d(container, dataset, groups, options);*/
-
+};*/
 
 // online, TPS, temp, cpu, mem
 function render(newData) {

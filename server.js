@@ -15,17 +15,6 @@ var config = {
 };
 
 var logs = [];
-//var log_file = null;
-/*
-log_file = fs.createWriteStream(path.join(config.dir, 'log'), { flags: 'a+',
-encoding: 'utf8' }).on('open', function(){
-
-}).on('error', function(err){
-console.error(err);
-});*/
-//log_file = fs.openSync(path.join(config.dir, 'log'), 'a');
-
-
 
 var exe = function(exec, arg, cb){
 	var child = spawn(exec, arg);
@@ -55,7 +44,7 @@ var trim = function(arr){
 		str += '\t' + last[1];
 		str += '\t' + last[2];*/
 		//log_file.write(JSON.stringify(last));
-		fs.appendFile(path.join(config.dir, 'log'), JSON.stringify(last), function (err) {
+		fs.appendFile(path.join(config.dir, 'log'), JSON.stringify(last) + '\n', function (err) {
 			if (err) throw err;
 			console.log('append:', last);
 		});
@@ -143,9 +132,4 @@ function handleRequest(req, res) {
 }
 
 exports.server = server;
-/*
-server.listen(config.port, function() {
-  console.log('\tserver listening on port', config.port);
-});
-*/
 
