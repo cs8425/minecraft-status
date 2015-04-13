@@ -88,7 +88,7 @@ date: new Date()
 
 					}
 console.log('post data', obj);
-					if( (obj.topic || obj.r) && obj.name && obj.email && obj.content){
+					if( (check(obj.topic) || check(obj.r)) && check(obj.name) && check(obj.email) && check(obj.content)){
 						topic.insert({
 							id: make_rand(4)+(new Date()*1.0).toString(16),
 							pid: obj.r,
@@ -115,6 +115,12 @@ console.log('post data', obj);
 
 }
 
+function check(data){
+	if(data === null) return false;
+	if(typeof data === 'undefined') return false;
+	if(data.replace(/[ \n　]*/gi,'') === '')  return false;
+	return true;
+}
 
 function make_rand(len){
 	var text = "";

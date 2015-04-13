@@ -32,7 +32,7 @@ var update = function(){
 		method: "GET",
 		url: "/api/board" + url,
 		dataType: "json",
-		error:  function( jqXHR, textStatus, errorThrown ){console.log(errorThrown);},
+		error:  function( jqXHR, textStatus, errorThrown ){console.log(errorThrown);timer = setTimeout(update, 60*1000);},
 		success: function(data, textStatus, jqXHR ){
 console.log(data);
 			if(url == ''){
@@ -42,10 +42,10 @@ console.log(data);
 				$('#list').html(list_topic(data));
 				$('#goback').unbind('click').bind('click', goback);
 			}
-			
+			timer = setTimeout(update, 60*1000);
 		}
 	});
-	//timer = setTimeout(update, 60*1000);
+	
 }
 update();
 
@@ -91,7 +91,7 @@ var post = function(){
 		error:  function( jqXHR, textStatus, errorThrown ){console.log(errorThrown);},
 		success: function(data, textStatus, jqXHR ){
 console.log(data);
-			//render(newData);
+			$('#content').val('');
 			update();
 		}
 	});
