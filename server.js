@@ -9,15 +9,10 @@ var child_process = require('child_process');
 var spawn = child_process.spawn;
 
 var tool = require('./tool.js');
-//var board = require('./board.js');
+var board = require('./board.js');
+board.init();
 
-//var exports = module.exports = {};
 config.dir = path.join(process.cwd(), 'public');
-/*var config = {
-	dir: path.join(process.cwd(), 'public'),
-	port: 8080,
-	helper: '/home/pi/spigot_server/minecraft'
-};*/
 
 var logs = [];
 
@@ -137,8 +132,8 @@ console.log(req.url);
 		}
 	}
 
-	switch(req.url) {
-		case '/api/log':
+	switch(true) {
+		case (req.url == '/api/log'):
 			res.writeHead(200, {
 				'content-type': 'text/javascript',
 				'cache-control': 'private,max-age=30',
@@ -147,17 +142,17 @@ console.log(req.url);
 			res.end(JSON.stringify(logs));
 		break;
 
-		case '/api/board':
+		case /\/api\/board.*/.test(req.url):
 			res.writeHead(200, {
 				'content-type': 'text/javascript',
 				'cache-control': 'private,max-age=0,no-cache',
 				'Expires': new Date().toUTCString()
 			});
-			res.end();
-			//board(req, res);
+			//res.end('board');
+			board.handler(req, res);
 		break;
 
-		case '/board':
+		case (req.url == '/board'):
 			loadFile('board.html', req.headers['if-none-match'], send_file);
 		break;
 
@@ -166,7 +161,6 @@ console.log(req.url);
 	}
 }
 
-//exports.server = server;
 	return server;
 }
 

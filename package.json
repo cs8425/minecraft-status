@@ -1,0 +1,9 @@
+{
+    "name": "Minecraft-status",
+    "version": "0.1.0",
+    "description": "log Minecraft status and provide a simple message board",
+    "private": true,
+    "dependencies": {
+      "lokijs": "1.2.5"
+    }
+}
