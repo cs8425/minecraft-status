@@ -1,19 +1,23 @@
 // copy and modify from gavinuhma's node-asset-cache
 // url: https://github.com/gavinuhma/node-asset-cache/blob/master/lib/asset-cache.js
+module.exports = function(config){
+
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var child_process = require('child_process');
 var spawn = child_process.spawn;
+
 var tool = require('./tool.js');
+//var board = require('./board.js');
 
-var exports = module.exports = {};
-
-var config = {
+//var exports = module.exports = {};
+config.dir = path.join(process.cwd(), 'public');
+/*var config = {
 	dir: path.join(process.cwd(), 'public'),
 	port: 8080,
 	helper: '/home/pi/spigot_server/minecraft'
-};
+};*/
 
 var logs = [];
 
@@ -30,7 +34,7 @@ var exe = function(exec, arg, cb){
 	});
 }
 
-var trim_conter = 0;
+var trim_conter = 5;
 var trim = function(arr){
 	var out;
 	trim_conter++;
@@ -42,7 +46,7 @@ var trim = function(arr){
 	arr = null;
 	if(trim_conter == 5){
 		trim_conter = 0;
-		var last = arr[arr.length - 1];
+		var last = out[out.length - 1];
 		/*var str = '[' +last[0].toString() + ']';
 		str += '\t' + last[3];
 		str += '\t' + last[4];
@@ -96,52 +100,74 @@ var loadFile = function(file, ifNoneMatch, callback) {
 var server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-//console.log(req.url, req.url != '/api/log');
-	if(req.url != '/api/log'){
-		loadFile(req.url, req.headers['if-none-match'], function(err, body, notModified, etag) {
-			var status;
+console.log(req.url);
+	var send_file = function (err, body, notModified, etag) {
+		var status;
 
-			if (err) {
-				//console.error(err);
-				status = notModified ? 304 : 404;
-			} else {
-				status = notModified ? 304 : 200;
-			}
+		if (err) {
+			//console.error(err);
+			status = notModified ? 304 : 404;
+		} else {
+			status = notModified ? 304 : 200;
+		}
 
-			var ct = '';
+		var ct = '';
 
-			if (req.url.indexOf('.css') !== -1) {
-				ct = 'text/css';
-			} else if (req.url.indexOf('.js') !== -1) {
-				ct = 'text/javascript';
-			} else if (req.url.indexOf('.html') !== -1) {
-				ct = 'text/html';
-			} else if (req.url.indexOf('.png') !== -1) {
-				ct = 'image/png';
-			}
+		if (req.url.indexOf('.css') !== -1) {
+			ct = 'text/css';
+		} else if (req.url.indexOf('.js') !== -1) {
+			ct = 'text/javascript';
+		} else if (req.url.indexOf('.html') !== -1) {
+			ct = 'text/html';
+		} else if (req.url.indexOf('.png') !== -1) {
+			ct = 'image/png';
+		}
 
-			res.writeHead(status, {
-				'content-type': ct,
-				'cache-control': 'must-revalidate,private,max-age=1209600',
-				'Expires': new Date(Date.now() + 1209600000).toUTCString(),
-				'etag': etag
+		res.writeHead(status, {
+			'content-type': ct,
+			'cache-control': 'must-revalidate,private,max-age=1209600',
+			'Expires': new Date(Date.now() + 1209600000).toUTCString(),
+			'etag': etag
+		});
+
+		if (notModified) {
+			res.end();
+		} else {
+			res.end(body);
+		}
+	}
+
+	switch(req.url) {
+		case '/api/log':
+			res.writeHead(200, {
+				'content-type': 'text/javascript',
+				'cache-control': 'private,max-age=30',
+				'Expires': new Date(Date.now() + 30000).toUTCString()
 			});
+			res.end(JSON.stringify(logs));
+		break;
 
-			if (notModified) {
-				res.end();
-			} else {
-				res.end(body);
-			}
-		});
-	}else{
-		res.writeHead(200, {
-			'content-type': 'text/javascript',
-			'cache-control': 'private,max-age=30',
-			'Expires': new Date(Date.now() + 30000).toUTCString()
-		});
-		res.end(JSON.stringify(logs));
+		case '/api/board':
+			res.writeHead(200, {
+				'content-type': 'text/javascript',
+				'cache-control': 'private,max-age=0,no-cache',
+				'Expires': new Date().toUTCString()
+			});
+			res.end();
+			//board(req, res);
+		break;
+
+		case '/board':
+			loadFile('board.html', req.headers['if-none-match'], send_file);
+		break;
+
+		default:
+			loadFile(req.url, req.headers['if-none-match'], send_file);
 	}
 }
 
-exports.server = server;
+//exports.server = server;
+	return server;
+}
+
 

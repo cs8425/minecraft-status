@@ -40,7 +40,7 @@ if (cluster.isMaster) {
 	backup();
 }else{
 
-	var server = require('./server.js').server;
+	var server = require('./server.js')(config);
 
 	server.listen(config.port, function() {
 		console.log('\tserver listening on port', config.port);

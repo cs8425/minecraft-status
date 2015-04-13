@@ -121,9 +121,7 @@ mem.graph2d.on('rangechange', onChange);
 
 // online, TPS, temp, cpu, mem
 function render(newData) {
-	//var now = moment();
-	//var startPoint = now -  80 * 60 * 1000;
-	//var endPoint = now + 20 * 60 * 1000;
+
 	startPoint += 60*1000;
 	endPoint += 60*1000;
 
@@ -165,19 +163,11 @@ var getold = function(){
 				if(row == null) continue;
 				var t = moment(row[0]);
 				// online, TPS, temp, cpu, mem
-				if(1){
-					newData[0].push({id: 'o'+i, x: t, y: row[5], label: {content:''}});
-					newData[1].push({id: 'o'+i, x: t, y: row[4], label: {content:''}});
-					newData[2].push({id: 'o'+i, x: t, y: row[1], label: {content:''}});
-					newData[3].push({id: 'o'+i, x: t, y: row[2], label: {content:''}});
-					newData[4].push({id: 'o'+i, x: t, y: row[3][1]/1024.0, label: {content:''}});
-				}else{
-					newData[0].push({x: t, y: row[5], label: {content: row[5].toString()}});
-					newData[1].push({x: t, y: row[4], label: {content: row[4] + ''}});
-					newData[2].push({x: t, y: row[1], label: {content: round(row[1]) + ''}});
-					newData[3].push({x: t, y: row[2], label: {content: row[2] + ''}});
-					newData[4].push({x: t, y: row[3][1]/1024.0, label: {content: round(row[3][1]/1024.0) + ''}});
-				}
+				newData[0].push({id: 'o'+i, x: t, y: row[5], label: {content:''}});
+				newData[1].push({id: 'o'+i, x: t, y: row[4], label: {content:''}});
+				newData[2].push({id: 'o'+i, x: t, y: row[1], label: {content:''}});
+				newData[3].push({id: 'o'+i, x: t, y: row[2], label: {content:''}});
+				newData[4].push({id: 'o'+i, x: t, y: row[3][1]/1024.0, label: {content:''}});
 			}
 			old_data = newData;
 console.log(old_data);
@@ -201,28 +191,22 @@ var update = function(){
 				var row = data[i];
 				var t = moment(row[0]);
 				// online, TPS, temp, cpu, mem
-				if(1){
-					newData[0].push({id: 'n'+i, x: t, y: row[5], label: {content:''}});
-					newData[1].push({id: 'n'+i, x: t, y: row[4], label: {content:''}});
-					newData[2].push({id: 'n'+i, x: t, y: row[1], label: {content:''}});
-					newData[3].push({id: 'n'+i, x: t, y: row[2], label: {content:''}});
-					newData[4].push({id: 'n'+i, x: t, y: row[3][1]/1024.0, label: {content:''}});
-				}else{
-					newData[0].push({x: t, y: row[5], label: {content: row[5] + ''}});
-					newData[1].push({x: t, y: row[4], label: {content: row[4] + ''}});
-					newData[2].push({x: t, y: row[1], label: {content: round(row[1]) + ''}});
-					newData[3].push({x: t, y: row[2], label: {content: row[2] + ''}});
-					newData[4].push({x: t, y: row[3][1]/1024.0, label: {content: round(row[3][1]/1024.0) + ''}});
-				}
+				newData[0].push({id: 'n'+i, x: t, y: row[5], label: {content:''}});
+				newData[1].push({id: 'n'+i, x: t, y: row[4], label: {content:''}});
+				newData[2].push({id: 'n'+i, x: t, y: row[1], label: {content:''}});
+				newData[3].push({id: 'n'+i, x: t, y: row[2], label: {content:''}});
+				newData[4].push({id: 'n'+i, x: t, y: row[3][1]/1024.0, label: {content:''}});
 			}
-			for (var i = 0; i < 5; i++) {
-				newData[i] = newData[i].concat(old_data[i]);
-			}
+			count--;
 			online.graph2d.setOptions({defaultGroup: 'online user(s): ' + newData[0][count].y});
 			TPS.graph2d.setOptions({defaultGroup: 'Ticks Per Sec (TPS): ' + newData[1][count].y});
 			temp.graph2d.setOptions({defaultGroup: 'temp (°C): ' + round(newData[2][count].y)});
 			cpu.graph2d.setOptions({defaultGroup: 'CPU (%): ' + newData[3][count].y});
 			mem.graph2d.setOptions({defaultGroup: 'MEM used (MB): ' + round(newData[4][count].y)});
+
+			for (var i = 0; i < 5; i++) {
+				newData[i] = newData[i].concat(old_data[i]);
+			}
 console.log(newData);
 			render(newData);
 		}
