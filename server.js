@@ -1,4 +1,5 @@
-// copy from https://github.com/gavinuhma/node-asset-cache/blob/master/lib/asset-cache.js
+// copy and modify from gavinuhma's node-asset-cache
+// url: https://github.com/gavinuhma/node-asset-cache/blob/master/lib/asset-cache.js
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
@@ -31,10 +32,14 @@ var exe = function(exec, arg, cb){
 
 var trim_conter = 0;
 var trim = function(arr){
+	var out;
 	trim_conter++;
 	if(arr.length > 300){
-		arr = arr.slice(1);
+		out = arr.slice(1);
+	}else{
+		out = arr;
 	}
+	arr = null;
 	if(trim_conter == 5){
 		trim_conter = 0;
 		var last = arr[arr.length - 1];
@@ -49,6 +54,7 @@ var trim = function(arr){
 			console.log('append:', last);
 		});
 	}
+	return out;
 }
 
 var update = function(){
@@ -63,7 +69,7 @@ var update = function(){
 			var online = data.match(/(\d+\/\d+)/g)[0].split('/');
 			//console.log('online', data, online);
 			logs.push([new Date(), temp, cpu, mem, tps[0]*1.0, online[0]*1.0]);
-			trim(logs);
+			logs = trim(logs);
 			var t = setTimeout(update, 60*1000);
 		});
 	});
@@ -116,7 +122,8 @@ function handleRequest(req, res) {
 
 			res.writeHead(status, {
 				'content-type': ct,
-				'cache-control': 'must-revalidate,private',
+				'cache-control': 'must-revalidate,private,max-age=1209600',
+				'Expires': new Date(Date.now() + 1209600000).toUTCString(),
 				'etag': etag
 			});
 
@@ -127,6 +134,11 @@ function handleRequest(req, res) {
 			}
 		});
 	}else{
+		res.writeHead(200, {
+			'content-type': 'text/javascript',
+			'cache-control': 'private,max-age=30',
+			'Expires': new Date(Date.now() + 30000).toUTCString()
+		});
 		res.end(JSON.stringify(logs));
 	}
 }

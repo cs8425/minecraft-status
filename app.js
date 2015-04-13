@@ -22,12 +22,12 @@ if (cluster.isMaster) {
 			today = 0;
 //			var child = spawn(config.helper, ['backup'], {stdio: 'ignore'});
 			var child = spawn(config.helper, ['backup']);
-child.stdout.on('data', function (data) {
-	console.log('stdout:', data.toString());
-});
-child.stderr.on('data', function (data) {
-	console.log('stderr:', data.toString());
-});
+			child.stdout.on('data', function (data) {
+				console.log('stdout:', data.toString());
+			});
+			child.stderr.on('data', function (data) {
+				console.log('stderr:', data.toString());
+			});
 			child.on('close', function (code) {
 				console.log('backup end!');
 				var t = setTimeout(backup, 60*1000);
