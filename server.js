@@ -29,7 +29,7 @@ var exe = function(exec, arg, cb){
 	});
 }
 
-var trim_conter = 5;
+var trim_conter = 4;
 var trim = function(arr){
 	var out;
 	trim_conter++;
@@ -55,10 +55,11 @@ var trim = function(arr){
 	}
 	return out;
 }
-
+var cpu_tool = tool.cpu();
+var temp_tool = tool.temp();
 var update = function(){
-	var temp = tool.temp();
-	var cpu = tool.cpu();
+	var temp = temp_tool.get();
+	var cpu = cpu_tool.get();
 	var mem = tool.mem_arr();
 
 	exe(config.helper, ['tps'], function(code, data){
@@ -73,7 +74,7 @@ var update = function(){
 		});
 	});
 }
-update();
+var t = setTimeout(update, 2*1000);
 
 var loadFile = function(file, ifNoneMatch, callback) {
 //console.log(file);

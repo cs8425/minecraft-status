@@ -23,7 +23,7 @@ var list_board = doT.template($('#tmpl-board').html());
 var list_topic = doT.template($('#tmpl-topic').html());
 
 var st = 0;
-var timer;
+var timer = null;
 
 var update = function(){
 	clearTimeout(timer);

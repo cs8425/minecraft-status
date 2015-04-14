@@ -67,7 +67,7 @@ var cpu = gen($('#cpu')[0], {
 	sampling: true,
 	legend: true,
 	drawPoints: {style: 'circle', enabled:true, size:3},
-	catmullRom: {parametrization: 'uniform'},
+	catmullRom: {parametrization: 'centripetal'},
 	shaded: {orientation: 'bottom'},
 	start: startPoint,
 	end: endPoint,
@@ -201,7 +201,7 @@ var update = function(){
 			online.graph2d.setOptions({defaultGroup: 'online user(s): ' + newData[0][count].y});
 			TPS.graph2d.setOptions({defaultGroup: 'Ticks Per Sec (TPS): ' + newData[1][count].y});
 			temp.graph2d.setOptions({defaultGroup: 'temp (°C): ' + round(newData[2][count].y)});
-			cpu.graph2d.setOptions({defaultGroup: 'CPU (%): ' + newData[3][count].y});
+			cpu.graph2d.setOptions({defaultGroup: 'CPU (%): ' + round(newData[3][count].y)});
 			mem.graph2d.setOptions({defaultGroup: 'MEM used (MB): ' + round(newData[4][count].y)});
 
 			for (var i = 0; i < 5; i++) {
