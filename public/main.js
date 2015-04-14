@@ -85,7 +85,7 @@ var mem = gen($('#mem')[0], {
 	sampling: true,
 	legend: true,
 	drawPoints: {style: 'circle', enabled:true, size:3},
-	catmullRom: {parametrization: 'uniform'},
+	catmullRom: {parametrization: 'centripetal'},
 	shaded: {orientation: 'bottom'},
 	start: startPoint,
 	end: endPoint,

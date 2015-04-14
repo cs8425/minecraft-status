@@ -135,7 +135,7 @@ mc_tps() {
   if pgrep -u $USERNAME -f $SERVICE > /dev/null
   then
     as_user "screen -p 0 -S $SERVICE -X stuff  'tps\n'"
-    sleep .5
+    sleep 1
     tail -n 20 "$MCPATH/logs/latest.log" | grep TPS | tail -n 1
   else
     echo "$SERVICE is not running."

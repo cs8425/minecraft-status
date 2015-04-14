@@ -33,7 +33,7 @@ var trim_conter = 4;
 var trim = function(arr){
 	var out;
 	trim_conter++;
-	if(arr.length > 300){
+	if(arr.length > 120){
 		out = arr.slice(1);
 	}else{
 		out = arr;
@@ -56,6 +56,7 @@ var trim = function(arr){
 	return out;
 }
 var cpu_tool = tool.cpu();
+//cpu_tool.get();
 var temp_tool = tool.temp();
 var update = function(){
 	var temp = temp_tool.get();
@@ -65,16 +66,26 @@ var update = function(){
 	exe(config.helper, ['tps'], function(code, data){
 		var tps = data.match(/(\d+\.\d+)/g);
 		//console.log('tps', data, tps);
-		exe(config.helper, ['cmd', 'list'], function(code, data){
-			var online = data.match(/(\d+\/\d+)/g)[0].split('/');
-			//console.log('online', data, online);
-			logs.push([new Date(), temp, cpu, mem, tps[0]*1.0, online[0]*1.0]);
-			logs = trim(logs);
-			var t = setTimeout(update, 60*1000);
-		});
+		var t = setTimeout(function(){
+			exe(config.helper, ['cmd', 'list'], function(code, data){
+// [00:41:46] [Server thread/INFO]: There are 6/36 players online:
+				//var online = data.match(/(\d+\/\d+)/g)[0].split('/');
+				var online = data.match(/\[[\d:]+\] \[Server thread\/INFO\]: There are (\d+)\/(\d+) players online:/m);
+console.log('online', data, online);
+				if(online){
+					if(online.length > 2){
+						//console.log('online', data, online);
+						//logs.push([new Date(), temp, cpu, mem, tps[0]*1.0, online[0]*1.0]);
+						logs.push([new Date(), temp, cpu, mem, tps[0]*1.0, online[1]*1.0]);
+						logs = trim(logs);
+					}
+				}
+				var t = setTimeout(update, 60*1000);
+			});
+		}, 5*1000);
 	});
 }
-var t = setTimeout(update, 2*1000);
+var t = setTimeout(update, 16*1000);
 
 var loadFile = function(file, ifNoneMatch, callback) {
 //console.log(file);
@@ -96,7 +107,7 @@ var loadFile = function(file, ifNoneMatch, callback) {
 var server = http.createServer(handleRequest);
 
 function handleRequest(req, res) {
-console.log(req.url);
+//console.log(req.url);
 	var send_file = function (err, body, notModified, etag) {
 		var status;
 
