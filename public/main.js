@@ -67,7 +67,7 @@ var cpu = gen($('#cpu')[0], {
 	sampling: true,
 	legend: true,
 	drawPoints: {style: 'circle', enabled:true, size:3},
-	catmullRom: {parametrization: 'centripetal'},
+	catmullRom: false,
 	shaded: {orientation: 'bottom'},
 	start: startPoint,
 	end: endPoint,
@@ -85,7 +85,7 @@ var mem = gen($('#mem')[0], {
 	sampling: true,
 	legend: true,
 	drawPoints: {style: 'circle', enabled:true, size:3},
-	catmullRom: {parametrization: 'centripetal'},
+	catmullRom: false,
 	shaded: {orientation: 'bottom'},
 	start: startPoint,
 	end: endPoint,
@@ -167,7 +167,7 @@ var getold = function(){
 				newData[1].push({id: 'o'+i, x: t, y: row[4], label: {content:''}});
 				newData[2].push({id: 'o'+i, x: t, y: row[1], label: {content:''}});
 				newData[3].push({id: 'o'+i, x: t, y: row[2], label: {content:''}});
-				newData[4].push({id: 'o'+i, x: t, y: row[3][1]/1024.0, label: {content:''}});
+				newData[4].push({id: 'o'+i, x: t, y: row[3][0]/1024.0, label: {content:''}});
 			}
 			old_data = newData;
 console.log(old_data);
@@ -195,7 +195,7 @@ var update = function(){
 				newData[1].push({id: 'n'+i, x: t, y: row[4], label: {content:''}});
 				newData[2].push({id: 'n'+i, x: t, y: row[1], label: {content:''}});
 				newData[3].push({id: 'n'+i, x: t, y: row[2], label: {content:''}});
-				newData[4].push({id: 'n'+i, x: t, y: row[3][1]/1024.0, label: {content:''}});
+				newData[4].push({id: 'n'+i, x: t, y: row[3][0]/1024.0, label: {content:''}});
 			}
 			count--;
 			online.graph2d.setOptions({defaultGroup: 'online user(s): ' + newData[0][count].y});

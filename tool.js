@@ -1,11 +1,10 @@
 var fs = require('fs');
 var child_process = require('child_process');
 var spawn = child_process.spawn;
-var spawnSync = child_process.spawnSync;
 
 var exports = module.exports = {};
 
-exports.temp = function(){
+exports.temp = function(period){
 	var temp = {};
 	var val = 0;
 	var update = function(){
@@ -13,7 +12,7 @@ exports.temp = function(){
 			if (err) throw err;
 			val = data.toString() / 1000.0;
 		});
-		var t = setTimeout(update, 1000);
+		var t = setTimeout(update, period);
 	}
 	update();
 	temp.get = function(){
@@ -21,23 +20,44 @@ exports.temp = function(){
 	}
 	return temp;
 }
-
-exports.mem = function(){
-	var raw = spawnSync('free').output.toString().replace(/ +/g, ' ').split('\n');
-	var raw = raw[1].split(' ');
+exports.mem = function(period){
 	var mem = {};
-	mem.total = raw[1]*1.0;
-	mem.used = raw[2]*1.0;
-	mem.free = raw[3]*1.0;
-	mem.shared = raw[4]*1.0;
-	mem.buffers = raw[5]*1.0;
-	mem.cached = raw[6]*1.0;
-	mem.used -= mem.cached + mem.buffers;
-	mem.free += mem.cached + mem.buffers;
+	var val = {
+		used: 0,
+		free: 0,
+		buffer: 0,
+		cached: 0,
+	};
+
+	var update = function(){
+		fs.readFile('/proc/meminfo', function (err, data) {
+			if (err) throw err;
+			var info = data.toString().replace(/[ ]+/gi,'').split('\n');
+
+			//MemFree
+			val.free = info[1].match(/(.*):(\d+)(kB)?/)[2] * 1.0;
+
+			//Buffers
+			val.buffer = info[2].match(/(.*):(\d+)(kB)?/)[2] * 1.0;
+
+			//Cached
+			val.cached = info[3].match(/(.*):(\d+)(kB)?/)[2] * 1.0;
+
+			val.used = info[0].match(/(.*):(\d+)(kB)?/)[2] * 1.0 - val.free - val.buffer - val.cached;
+
+			//console.log('mem', info, val, val.used / 1024.0);
+
+		});
+		var t = setTimeout(update, period);
+	}
+	update();
+	mem.get = function(){
+		return val;
+	}
 	return mem;
 }
 
-exports.cpu = function(){
+exports.cpu = function(period){
 	var cpu = {};
 	var val = 0;
 	var info_l = null;
@@ -60,7 +80,7 @@ exports.cpu = function(){
 			info_l = null;
 			info_l = info;
 		});
-		var t = setTimeout(update, 15*1000);
+		var t = setTimeout(update, period);
 	}
 	update();
 	cpu.get = function(){
@@ -100,17 +120,5 @@ exports.cpu2 = function(){
 	return cpu;
 }
 
-exports.mem_arr = function(){
-	var raw = spawnSync('free').output.toString().replace(/ +/g, ' ').split('\n');
-	var raw = raw[1].split(' ');
-	var mem = [];
-	mem.push(raw[1]*1.0);
-	mem.push(raw[2]*1.0 - raw[5]*1.0 - raw[6]*1.0);
-	mem.push(raw[3]*1.0 + raw[5]*1.0 + raw[6]*1.0);
-	mem.push(raw[4]*1.0);
-	mem.push(raw[5]*1.0);
-	mem.push(raw[6]*1.0);
-	return mem;
-}
 
 

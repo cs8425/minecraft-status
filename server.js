@@ -55,13 +55,13 @@ var trim = function(arr){
 	}
 	return out;
 }
-var cpu_tool = tool.cpu();
-//cpu_tool.get();
-var temp_tool = tool.temp();
+var cpu_tool = tool.cpu(15*1000);
+var mem_tool = tool.mem(1000);
+var temp_tool = tool.temp(1000);
 var update = function(){
 	var temp = temp_tool.get();
 	var cpu = cpu_tool.get();
-	var mem = tool.mem_arr();
+	var mem = mem_tool.get();
 
 	exe(config.helper, ['tps'], function(code, data){
 		var tps = data.match(/(\d+\.\d+)/g);
@@ -76,7 +76,7 @@ console.log('online', data, online);
 					if(online.length > 2){
 						//console.log('online', data, online);
 						//logs.push([new Date(), temp, cpu, mem, tps[0]*1.0, online[0]*1.0]);
-						logs.push([new Date(), temp, cpu, mem, tps[0]*1.0, online[1]*1.0]);
+						logs.push([new Date(), temp, cpu, [mem.used, mem.free, mem.buffer, mem.cached], tps[0]*1.0, online[1]*1.0]);
 						logs = trim(logs);
 					}
 				}
