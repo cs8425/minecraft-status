@@ -2,6 +2,9 @@
 
 This branch serve only a simple message board!
 
+##TODO
+ - add some css and theme
+
 ###Install
   Install node.js, and
 > $ git clone https://github.com/cs8425/minecraft-status.git
@@ -14,7 +17,8 @@ This branch serve only a simple message board!
 edit `app.js`:
 ```
 var config = {
-	port: 8080  // your port here!
+	port: 8080,  // your port here!
+	db: 'board.json' // your db file (can be written)
 };
 ```
 

@@ -1,7 +1,8 @@
 var cluster = require('cluster');
 
 var config = {
-	port: 8080
+	port: 8080,
+	db: 'board.json'
 };
 
 if (cluster.isMaster) {

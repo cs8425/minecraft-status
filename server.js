@@ -6,7 +6,7 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs');
 
-var board = require('./board.js');
+var board = require('./board.js')(config.db);
 board.init();
 
 config.dir = path.join(process.cwd(), 'public');
