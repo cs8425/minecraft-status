@@ -42,12 +42,6 @@ var trim = function(arr){
 	if(trim_conter == 5){
 		trim_conter = 0;
 		var last = out[out.length - 1];
-		/*var str = '[' +last[0].toString() + ']';
-		str += '\t' + last[3];
-		str += '\t' + last[4];
-		str += '\t' + last[1];
-		str += '\t' + last[2];*/
-		//log_file.write(JSON.stringify(last));
 		fs.appendFile(path.join(config.dir, 'log'), JSON.stringify(last) + '\n', function (err) {
 			if (err) throw err;
 			console.log('append:', last);

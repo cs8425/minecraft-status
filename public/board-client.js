@@ -27,6 +27,10 @@ var timer = null;
 
 var update = function(){
 	clearTimeout(timer);
+	if(st == 0 && (window.location.hash)){
+		st = window.location.hash.replace(/^#/, '');
+	}
+
 	var url = (st != 0) ? '?get=' + st : '';
 	$.ajax({
 		method: "GET",
@@ -58,6 +62,7 @@ var goback = function(e){
 console.log(e, that, that.attr('id'));
 
 	st = 0;
+	window.location.hash = '';
 	update();
 }
 
@@ -69,7 +74,7 @@ var detail = function(e){
 	var that = $(this);
 console.log(e, that, that.attr('id'));
 
-	st = that.attr('id');
+	st = window.location.hash = that.attr('id');
 	update();
 }
 
