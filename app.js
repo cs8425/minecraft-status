@@ -5,8 +5,9 @@ var spawn = child_process.spawn;
 
 var config = {
 	port: 8080,
+	db: 'board.json',
 	helper: '/home/pi/spigot_server/minecraft',
-	mcport: 25565,
+	mcport: 25565
 };
 
 if (cluster.isMaster) {

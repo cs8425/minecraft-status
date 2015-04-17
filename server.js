@@ -9,7 +9,7 @@ var child_process = require('child_process');
 var spawn = child_process.spawn;
 
 var tool = require('./tool.js');
-var board = require('./board.js');
+var board = require('./board.js')(config.db);
 board.init();
 
 config.dir = path.join(process.cwd(), 'public');
